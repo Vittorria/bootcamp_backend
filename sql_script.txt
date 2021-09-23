@@ -1,0 +1,78 @@
+CREATE DATABASE wiredelta
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'C'
+    LC_CTYPE = 'C'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+
+
+
+-- Table: public.volunteers
+
+-- DROP TABLE public.volunteers;
+
+CREATE TABLE public.volunteers
+(
+    name "char",
+    id integer NOT NULL,
+    gender "char",
+    email "char",
+    bl_time_mng boolean,
+    bl_english boolean,
+    bl_leadership boolean,
+    comment "char",
+    CONSTRAINT volunteers_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.volunteers
+    OWNER to postgres;
+
+
+
+-- FUNCTION: public.f_add_new_volunteer(character varying, character varying, character varying, boolean, boolean, boolean, character varying)
+-- DROP FUNCTION public.f_add_new_volunteer(character varying, character varying, character varying, boolean, boolean, boolean, character varying);
+CREATE OR REPLACE FUNCTION public.f_add_new_volunteer(
+	name character varying,
+	email character varying,
+	gender character varying,
+	bl_time_mng boolean,
+	bl_english boolean,
+	bl_leadership boolean,
+	comment character varying)
+    RETURNS text
+    LANGUAGE 'plpgsql'
+
+    COST 100
+    VOLATILE
+
+AS $BODY$
+DECLARE
+message text;
+begin
+	message	:= 'FAILED';
+
+	IF COALESCE(name, '') = '' THEN
+		message	:= 'Data is empty';
+		RETURN message;
+	END IF;
+
+		WITH t1 AS (SELECT MAX("id") cid
+				FROM public.volunteers)
+		INSERT INTO public.volunteers (name, id, gender, email, bl_time_mng, bl_english, bl_leadership, comment)
+		SELECT name, (t1.cid + 1), gender, email, bl_time_mng, bl_english, bl_leadership, comment
+			FROM t1;
+
+		message := 'Added';
+		Return message;
+
+END
+
+$BODY$;
+
+ALTER FUNCTION public.f_add_new_volunteer(character varying, character varying, character varying, boolean, boolean, boolean, character varying)
+    OWNER TO postgres;

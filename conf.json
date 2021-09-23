@@ -1,0 +1,17 @@
+{"NODE_EN":"DEVELOPMENT",
+  "HOST":"127.0.0.1",
+  "PORT":3333,
+  "SSL_PORT":3443,
+  "SSL_KEY":"/etc/nginx/ssl/server.key",
+  "SSL_CRT":"/etc/nginx/ssl/server.crt",
+  "DB_HOST":"localhost",
+  "DB_PORT":5432,
+  "DB_USER":"postgres",
+  "DB_PASSWORD":"123123",
+  "DB_NAME":"wiredelta",
+  "API": "/api/v1",
+  "SECRET": "bezkoder-secret-key",
+  "USER": "hassie.parisian38@ethereal.email",
+  "PASS": "mAvzyrsf1VzsHdc1kM",
+  "DB_MAIN_SCHEMA": "public"
+}
